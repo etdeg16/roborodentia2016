@@ -7,7 +7,6 @@ const int motorB2 = 10; // IN B2 or IN4 (Motor B Direction)
 const int ENA = 5; // ENA (PWM or Enable for Motor A)
 const int ENB = 6; // ENB (PWM or Enable for Motor B)
 const int servoPin = 11; //Servo that controls the ultrasonic sensor
-const int eggServoPin = 3;
 const int sensor1 = A0; //Line-following sensors
 const int sensor2 = A1;
 const int sensor3 = A2;
@@ -38,6 +37,7 @@ void setup() {
   pinMode(sensor3, INPUT);
   servo.attach(servoPin); //intialize servos
   servo.write(75); //move servo on sensor to face forward
+  Serial.begin(9600);
 
 }
 
@@ -87,14 +87,13 @@ void loop() {
   }
   if (withinDistance) { //obstacle is detected 8 inches away
     stop();
-  }
-   else {
-      while (withinDistance) { //robot will still stop as long as an obstacle is detected
+    while (withinDistance) { //robot will still stop as long as an obstacle is detected
+        Serial.println("Obstacle Detected");
         delay(1500);
         withinDistance = obstacleDistance(10.0) > 2.0 && obstacleDistance(10.0) <= 10.0; //check if robot still detects an obstacle
-      }
-    }
+      }   
   }
+ }
 
 
 
@@ -104,8 +103,8 @@ void moveForward(int speed, int time) { //moves robot forward by powering both t
   digitalWrite(motorA1, HIGH);
   digitalWrite(motorA2, LOW);
   analogWrite(ENB, speed);
-  digitalWrite(motorB1, HIGH);
-  digitalWrite(motorB2, LOW);
+  digitalWrite(motorB1, LOW);
+  digitalWrite(motorB2, HIGH);
   delay(time); //amount of time the motors will move
 }
 
@@ -114,8 +113,8 @@ void moveBackward(int speed, int time) { //moves robot backward by powering both
   digitalWrite(motorA1, LOW);
   digitalWrite(motorA2, HIGH);
   analogWrite(ENB, speed);
-  digitalWrite(motorB1, LOW);
-  digitalWrite(motorB2, HIGH);
+  digitalWrite(motorB1, HIGH);
+  digitalWrite(motorB2, LOW);
   delay(time); //amount of time the motors will move
 }
 
@@ -124,8 +123,8 @@ void circle(int speed1, int speed2, int time) { //powers left and right motors w
   digitalWrite(motorA1, HIGH);
   digitalWrite(motorA2, LOW);
   analogWrite(ENB, speed2);
-  digitalWrite(motorB1, HIGH);
-  digitalWrite(motorB2, LOW);
+  digitalWrite(motorB1, LOW);
+  digitalWrite(motorB2, HIGH);
   delay(time); //amount of time the motors will move
 }
 
@@ -134,8 +133,8 @@ void backwardsCircle(int speed1, int speed2, int time) { //powers left and right
   digitalWrite(motorA1, LOW);
   digitalWrite(motorA2, HIGH);
   analogWrite(ENB, speed2);
-  digitalWrite(motorB1, LOW);
-  digitalWrite(motorB2, HIGH);
+  digitalWrite(motorB1, HIGH);
+  digitalWrite(motorB2, LOW);
   delay(time); //amount of time the motors will move
 }
 
@@ -144,8 +143,8 @@ void turnRight(int speed, int time) { //pivots the robot left by moving the left
   digitalWrite(motorA1, HIGH);
   digitalWrite(motorA2, LOW);
   analogWrite(ENB, speed);
-  digitalWrite(motorB1, LOW);
-  digitalWrite(motorB2, HIGH);
+  digitalWrite(motorB1, HIGH);
+  digitalWrite(motorB2, LOW);
   delay(time); //amount of time the motors will move
 }
 
@@ -154,8 +153,8 @@ void turnLeft(int speed, int time) { //pivots the robot right by moving the left
   digitalWrite(motorA1, LOW);
   digitalWrite(motorA2, HIGH);
   analogWrite(ENB, speed);
-  digitalWrite(motorB1, HIGH);
-  digitalWrite(motorB2, LOW);
+  digitalWrite(motorB1, LOW);
+  digitalWrite(motorB2, HIGH);
   delay(time); //amount of time the motors will move
 }
 
